@@ -1,0 +1,75 @@
+user root;
+daemon off;
+
+events {
+    worker_connections 768;
+}
+
+http {
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 65;
+    types_hash_max_size 2048;
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    access_log off;
+    error_log /var/log/app_engine/error.log;
+
+    gzip on;
+    gzip_disable "msie6";
+
+    upstream django {
+	    server unix:/root/beacon.sock; # for a file socket
+    }
+    server {
+        listen 8080;
+        charset utf-8;
+    	client_max_body_size 200M;
+	resolver 8.8.8.8;
+
+	location ~* /protected/pdf/(.*) {
+		resolver 8.8.8.8;
+                internal;
+                set $file_name $1;
+                set $download_uri https://storage.googleapis.com/django-beacon/media/protected/pdf/$file_name;
+                proxy_set_header HOST storage.googleapis.com;
+		proxy_set_header Authorization '';
+                proxy_hide_header Content-Disposition;
+		add_header Content-Disposition $upstream_http_content_disposition;
+		add_header Access-Control-Allow-Origin '*';
+		proxy_max_temp_file_size 0;
+                proxy_pass $download_uri;
+        }
+
+	location /media  {
+		proxy_pass https://storage.googleapis.com/django-beacon$request_uri;
+                proxy_pass_request_headers on;
+                proxy_pass_request_body on;
+                proxy_set_header X-Forwarded-Host $host;
+                proxy_set_header X-Forwarded-Server $host;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	}
+
+	location /static {
+        	proxy_pass https://storage.googleapis.com/django-beacon$request_uri;
+                proxy_pass_request_headers on;
+                proxy_pass_request_body on;
+                proxy_set_header X-Forwarded-Host $host;
+                proxy_set_header X-Forwarded-Server $host;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	}
+
+	location / {
+		uwsgi_pass django;
+		include     /etc/nginx/uwsgi_params; # the uwsgi_params file you installed
+		uwsgi_read_timeout 120s;
+		uwsgi_param UWSGI_CACHE_GET $request_uri;
+		uwsgi_param Host $host;
+		uwsgi_param X-Real-IP $remote_addr;
+		uwsgi_param X-Forwarded-For $proxy_add_x_forwarded_for;
+		uwsgi_param X-Forwarded-Proto $http_x_forwarded_proto;
+	}
+    }
+}

@@ -1,0 +1,13 @@
+cairocffi==0.6
+google-auth==1.2.0
+Django==1.11.17
+djangorestframework
+coreapi==2.3.3
+django-cors-headers
+psycopg2
+WeasyPrint
+google-api-python-client
+gunicorn==19.7.1
+django-storages==1.6.5
+google-cloud-storage
+django-filter==1.1.0

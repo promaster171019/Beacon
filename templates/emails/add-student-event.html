@@ -1,0 +1,20 @@
+Dear {{ teacher }},
+
+{{ user }} has added {{ student_first_name }} {{ student_last_name }} in the following class.
+
+{{ location }}
+{{ subject }} {{ duration }}
+Date {{ start_date }} till {{ end_date }}
+Time {{ start_time }} to {{ end_time }}
+
+Students now in your class are
+
+{% for student in students %}
+- {{ student.name }}
+{% endfor %}
+
+This has been added to your google calendar.
+
+Thanks
+
+Beacon User

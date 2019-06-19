@@ -1,0 +1,27 @@
+[uwsgi]
+module = beacon.wsgi
+
+base = /app/BEacon
+
+chdir = %(base)
+home = /env
+plugins = python3
+master = true
+process = 4
+socket = /root/beacon.sock
+chmod-socket = 666
+chown-socket = root:root
+uid = root
+gid = root
+vacuum = true
+die-on-term = true
+
+limit-as = 2000
+
+max-requests = 3000
+
+enable-threads = true
+close-on-exec  = true
+
+logto = /var/log/app_engine/uwsgi.log
+

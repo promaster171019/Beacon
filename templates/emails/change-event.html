@@ -1,0 +1,20 @@
+Dear {{ teacher }},
+
+{{ user }} has changed a your class. The details are as follows
+
+Location - {{ location }}
+Subject - {{ subject }} {{ duration }}
+Room - {{ room }}
+Date - {{ class_date }}
+Time - {{ start_time }} to {{ end_time }}
+
+Students in your class are
+{% for student in students %}
+- {{ student.name }}
+{% endfor %}
+
+This has been updated in your google calendar.
+
+Thanks
+
+Beacon User

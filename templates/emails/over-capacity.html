@@ -1,0 +1,34 @@
+Dear {{ manager }},
+<br>
+<br>
+
+Kindly correct the classes on this list. These classes are currently over their class size limit.<br>
+<br>
+<table>
+    <thead>
+        <th style="padding: 0 7px;">Date</th>
+        <th style="padding: 0 7px;">Location</th>
+        <th style="padding: 0 7px;">Duration</th>
+        <th style="padding: 0 7px;">Subject</th>
+        <th style="padding: 0 7px;">Teacher</th>
+        <th style="padding: 0 7px;">Class Size</th>
+    </thead>
+    <tbody>
+        {% for item in rollout %}
+        <tr>
+            <td style="padding: 0 7px;">{{item.class_date}}</td>
+            <td style="padding: 0 7px;">{{item.location}}</td>
+            <td style="padding: 0 7px;">{{item.duration}}</td>
+            <td style="padding: 0 7px;">{{item.subject}}</td>
+            <td style="padding: 0 7px;">{{item.teacher}}</td>
+            <td style="padding: 0 7px;">{{item.class_size}}/{{item.max_capacity}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<br>
+
+Thanks
+<br>
+<br>
+Beacon User
